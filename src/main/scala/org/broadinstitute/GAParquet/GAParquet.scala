@@ -13,7 +13,7 @@ import com.beust.jcommander.JCommander
 package org.broadinstitute.GAParquet {
 
 import scala.collection.JavaConversions._
-import org.broadinstitute.GAParquet.tools.{PrintTable, Crusher}
+import org.broadinstitute.GAParquet.tools.{CountReads, PrintTable, Crusher}
 import com.beust.jcommander.Parameter
 
 object GAParquet {
@@ -31,6 +31,9 @@ object GAParquet {
 
       @Parameter(names=Array("-T","--tool"),description="The tool to use")
       var tool : String = null
+
+      @Parameter(names=Array("-L","--intervals"),description="The intervals to extract")
+      var intervals : String = null
     }
 
   def parse_arguments(args: Array[String]) {
@@ -43,28 +46,16 @@ object GAParquet {
     if ( GAPConfig.tool == "PrintTable" ) {
       val printTable = new PrintTable(GAPConfig.debug,GAPConfig.inFiles.toList.map((x: String) => new File(x)))
       return printTable.run()
+    } else if ( GAPConfig.tool == "CountReads" ) {
+      val readCounter = new CountReads(GAPConfig.debug,GAPConfig.inFiles.toList.map((x:String) => new File(x)),GAPConfig.intervals)
     }
 
     false
   }
 
-  def run_basicPushdown(args: Array[String]) : Unit = {
-    //val sc = new SparkContext("local","BasicPushdown")
-    val job = new Job()
-
-    val outputDir = new File("./BasicPushdowns_output")
-    ParquetInputFormat.setReadSupportClass(job,classOf[AvroReadSupport[ADAMRecord]])
-
-    //val oFile = sc.newAPIHadoopFile(outputDir.getAbsolutePath,classOf[ParquetInputFormat[ADAMRecord]],
-     //classOf[Void],classOf[ADAMRecord],job.getConfiguration)
-
-    //oFile.foreach( (u: Tuple2[Void,ADAMRecord]) => println(u._1.toString))
-  }
-
 
   def main(args:Array[String]) {
     parse_arguments(args)
-    run_basicPushdown(args)
   }
 
 
