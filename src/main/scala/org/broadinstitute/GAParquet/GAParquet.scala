@@ -38,7 +38,8 @@ object GAParquet {
 
   def parse_arguments(args: Array[String]) {
     new JCommander(GAPConfig,args.toArray: _*)
-    run()
+    val success : Boolean = run()
+    System.exit(if (success) 0 else 1)
   }
 
   def run() : Boolean = {
@@ -48,7 +49,10 @@ object GAParquet {
       return printTable.run()
     } else if ( GAPConfig.tool == "CountReads" ) {
       val readCounter = new CountReads(GAPConfig.debug,GAPConfig.inFiles.toList.map((x:String) => new File(x)),GAPConfig.intervals)
+      return readCounter.run()
     }
+
+    println("No tool found matching name "+GAPConfig.tool)
 
     false
   }
