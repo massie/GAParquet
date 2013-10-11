@@ -9,14 +9,11 @@ import parquet.column.ColumnReader
 import parquet.filter.ColumnRecordFilter._
 import parquet.filter.ColumnPredicates._
 import com.beust.jcommander.JCommander
-
-package org.broadinstitute.GAParquet {
-
 import scala.collection.JavaConversions._
 import org.broadinstitute.GAParquet.tools.{CountReads, PrintTable, Crusher}
 import com.beust.jcommander.Parameter
 
-object GAParquet {
+class GAParquet extends App {
 
   object GAPConfig {
       // Declared as var because JCommander assigns a new collection declared
@@ -58,11 +55,11 @@ object GAParquet {
   }
 
 
-  def main(args:Array[String]) {
+  override def main(args:Array[String]) {
     parse_arguments(args)
   }
 
 
 }
 
-}
+object GAParquet {}
